@@ -166,7 +166,9 @@ $$s = \sum_{n=1}^{N} \tilde{o}_n, \qquad \hat{p} = \mathrm{softmax}(s), \qquad \
 
 All hard/soft pairs are connected via the STE pattern:
 
-$$z = z_{\text{soft}} + \operatorname{stop\_gradient}(z_{\text{hard}} - z_{\text{soft}})$$
+$$z = z_{\text{soft}} + \text{sg}(z_{\text{hard}} - z_{\text{soft}})$$
+
+where $\text{sg}(\cdot)$ denotes stop-gradient.
 
 In PyTorch: `soft + (hard - soft).detach()`. The forward value equals `hard`; the backward gradient flows through `soft`.
 
