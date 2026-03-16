@@ -1,0 +1,59 @@
+# VG-RAM WNN — full MNIST experiment
+# 50 000 train, 10 000 validation, 10 000 test (standard MNIST split).
+# Batch size: 20
+
+data:
+  dataset: mnist
+  train_samples: 50000
+  test_samples: 10000
+  val_samples: 10000
+  batch_size: 20
+  same_train_test: false
+
+network:
+  input_size: 784
+  num_classes: 10
+
+  first_layer:
+    num_neurons: 256
+    num_synapses: 32
+    num_entries: 1000
+    output_dim: 8
+    # Para economizar memoria GPU, ative chunking e/ou grad checkpoint:
+    #   neuron_chunk_size: 32       # >0 = processa N neuronios por vez; 0 = desligado
+    #   use_grad_checkpoint: true   # true = recomputa forward no backward; false = desligado
+
+  intermediate_layers:
+    count: 0                   # 0 = nenhuma camada intermediaria
+    num_neurons: 128
+    num_synapses: 32
+    num_entries: 500
+    output_dim: 8
+
+  output_layer:
+    num_neurons: 128
+    num_synapses: 32
+    num_entries: 1000
+    output_dim: 10
+
+training:
+  epochs: 200
+  lr: 0.03
+  optimizer: adam
+  tau_b_start: 1.0
+  tau_b_end: 0.05
+  tau_a_start: 1.0
+  tau_a_end: 0.05
+  beta_start: 1.0
+  beta_end: 20.0
+  lambda_bin_mem: 0.0005
+  lambda_bin_out: 0.0005
+  device: cuda                    # cpu | cuda | auto (auto = cuda se disponivel)
+  seed: 42
+
+wandb:
+  enabled: true
+  project: vgram-wnn
+  run_name: full-50k
+  tags: [full, mnist]
+  notes: "50k train, 10k val, 10k test — standard MNIST"
